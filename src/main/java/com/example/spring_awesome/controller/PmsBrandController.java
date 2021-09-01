@@ -1,7 +1,7 @@
 package com.example.spring_awesome.controller;
 
 import com.example.spring_awesome.common.api.CommonPage;
-import com.example.spring_awesome.common.api.CommonResult;
+import com.example.spring_awesome.common.api.ResultData;
 import com.example.spring_awesome.mbg.model.PmsBrand;
 import com.example.spring_awesome.service.PmsBrandService;
 import org.slf4j.Logger;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,71 +23,81 @@ import java.util.List;
 @RequestMapping("/brand")
 public class PmsBrandController {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PmsBrandController.class);
 	@Autowired
 	private PmsBrandService demoService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PmsBrandController.class);
 
-	@RequestMapping(value = "/listAll",method = RequestMethod.GET)
+	@RequestMapping(value = "/listAll", method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResult<List<PmsBrand>> getBrandList(){
-		return CommonResult.success(demoService.listAllBrand());
+	public List<String> getBrandList() {
+		List<String> list = new ArrayList<>();
+		list.add("aaa");
+		return list;
 	}
 
-	@RequestMapping(value = "/create",method = RequestMethod.POST)
+	@RequestMapping(value = "/listAll2", method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResult createBrand(@RequestBody PmsBrand pmsBrand){
-		CommonResult commonResult;
+	public void getBrandList2() {
+		throw  new RuntimeException("xxxxxxx");
+	}
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultData createBrand(@RequestBody PmsBrand pmsBrand) {
+		ResultData commonResult;
 		int count = demoService.createBrand(pmsBrand);
-		if(count==1){
-			commonResult = CommonResult.success(pmsBrand);
+		if (count == 1) {
+			commonResult = ResultData.success(pmsBrand);
 			LOGGER.debug("createBrand success:{}", pmsBrand);
-		}else{
-			commonResult = CommonResult.failed("操作失败");
-			LOGGER.debug("createBrand failed:{}", pmsBrand);
+		} else {
+			commonResult = ResultData.fail(1, "操作失败");
+			LOGGER.debug("createBrand fail:{}", pmsBrand);
 		}
 		return commonResult;
 	}
 
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResult updateBrand(@PathVariable("id") Long id, @RequestBody PmsBrand pmsBrandDto, BindingResult result) {
-		CommonResult commonResult;
+	public ResultData updateBrand(@PathVariable("id") Long id, @RequestBody PmsBrand pmsBrandDto,
+								  BindingResult result) {
+		ResultData commonResult;
 		int count = demoService.updateBrand(id, pmsBrandDto);
 		if (count == 1) {
-			commonResult = CommonResult.success(pmsBrandDto);
+			commonResult = ResultData.success(pmsBrandDto);
 			LOGGER.debug("updateBrand success:{}", pmsBrandDto);
 		} else {
-			commonResult = CommonResult.failed("操作失败");
-			LOGGER.debug("updateBrand failed:{}", pmsBrandDto);
+			commonResult = ResultData.fail(1, "操作失败");
+			LOGGER.debug("updateBrand fail:{}", pmsBrandDto);
 		}
 		return commonResult;
 	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResult deleteBrand(@PathVariable("id") Long id) {
+	public ResultData deleteBrand(@PathVariable("id") Long id) {
 		int count = demoService.deleteBrand(id);
 		if (count == 1) {
 			LOGGER.debug("deleteBrand success :id={}", id);
-			return CommonResult.success(null);
+			return ResultData.success(null);
 		} else {
-			LOGGER.debug("deleteBrand failed :id={}", id);
-			return CommonResult.failed("操作失败");
+			LOGGER.debug("deleteBrand fail :id={}", id);
+			return ResultData.fail(1, "操作失败");
 		}
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResult<CommonPage<PmsBrand>> listBrand(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-														@RequestParam(value = "pageSize", defaultValue = "3") Integer pageSize) {
+	public ResultData<CommonPage<PmsBrand>> listBrand(
+			@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+			@RequestParam(value = "pageSize", defaultValue = "3") Integer pageSize) {
 		List<PmsBrand> brandList = demoService.listBrand(pageNum, pageSize);
-		return CommonResult.success(CommonPage.restPage(brandList));
+		return ResultData.success(CommonPage.restPage(brandList));
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResult<PmsBrand> brand(@PathVariable("id") Long id) {
-		return CommonResult.success(demoService.getBrand(id));
+	public ResultData<PmsBrand> brand(@PathVariable("id") Long id) {
+		return ResultData.success(demoService.getBrand(id));
 	}
 }

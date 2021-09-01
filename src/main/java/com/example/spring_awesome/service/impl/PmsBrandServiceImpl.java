@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Service
 public class PmsBrandServiceImpl implements PmsBrandService {
-
+//    123123
 	@Autowired
 	private PmsBrandMapper brandMapper;
 
