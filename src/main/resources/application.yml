@@ -1,15 +1,18 @@
 server:
-    port: 8888
+  port: 8888
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mall?useUnicode=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: root
+    druid:
+      test-on-borrow: true
+      test-while-idle: true
   jackson:
     default-property-inclusion: non_null
 
 mybatis:
-  mapper-locations:
-    - classpath:mapper/*.xml
-    - classpath*:com/**/mapper/*.xml
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

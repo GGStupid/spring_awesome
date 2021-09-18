@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * @Description:
- * @author:RestExceptionHandler
  * @date: 2021/9/1 15:21
  */
 @Slf4j
