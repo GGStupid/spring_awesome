@@ -52,7 +52,7 @@ public class UserRealm extends AuthorizingRealm {
 		List<String> permissionList = permissionService.findByRoleId(roleIds);
 		authorizationInfo.setStringPermissions(new HashSet<>(permissionList));
 
-		log.info("authorizationInfo:{}",roleList);
+		log.info("authorizationInfo:{}", roleList);
 
 		return authorizationInfo;
 	}

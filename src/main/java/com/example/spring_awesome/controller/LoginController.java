@@ -2,12 +2,13 @@ package com.example.spring_awesome.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,8 +28,19 @@ public class LoginController {
 
 		Subject userSubject = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(account, password);
-		log.info("token:{}",token);
-		userSubject.login(token);
+		log.info("token:{}", token);
+		try {
+			userSubject.login(token);
+		} catch (UnknownAccountException e) {
+			e.printStackTrace();
+			throw new UnknownAccountException("认证失败：用户不存在！");
+		} catch (IncorrectCredentialsException e) {
+			e.printStackTrace();
+			throw new IncorrectCredentialsException("认真失败：密码错误");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@GetMapping("/login")
